@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curly Girl Method Ingredient Checker</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Libre+Baskerville:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #f8f5f1;
+            --bg-card: #ffffff;
+            --text-primary: #2d2d2d;
+            --text-secondary: #6b6b6b;
+            --accent-avoid: #d94545;
+            --accent-safe: #2d9f66;
+            --accent-unknown: #e89b3c;
+            --border: #e0ddd9;
+            --shadow: rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(135deg, #f8f5f1 0%, #ebe5dd 100%);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        h1 {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 28px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 24px;
+            animation: fadeInUp 0.6s ease-out 0.1s backwards;
+        }
+
+        .clear-button {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+
+        .clear-button.visible {
+            display: block;
+        }
+
+        .clear-button:hover {
+            color: var(--text-primary);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--bg-card);
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--text-primary);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 1000;
+            box-shadow: 0 8px 24px var(--shadow);
+            display: none;
+        }
+
+        .autocomplete-list.active {
+            display: block;
+            animation: slideDown 0.2s ease-out;
+        }
+
+        .autocomplete-item {
+            padding: 14px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid var(--border);
+            transition: all 0.2s ease;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item:hover,
+        .autocomplete-item.highlighted {
+            background: #f5f5f5;
+        }
+
+        .autocomplete-item.avoid {
+            border-left: 3px solid var(--accent-avoid);
+        }
+
+        .autocomplete-item.safe {
+            border-left: 3px solid var(--accent-safe);
+        }
+
+        .autocomplete-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .autocomplete-badge.avoid {
+            background: rgba(217, 69, 69, 0.15);
+            color: var(--accent-avoid);
+        }
+
+        .autocomplete-badge.safe {
+            background: rgba(45, 159, 102, 0.15);
+            color: var(--accent-safe);
+        }
+
+        .result-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px var(--shadow);
+            margin-bottom: 24px;
+            animation: fadeInUp 0.4s ease-out;
+            display: none;
+        }
+
+        .result-card.show {
+            display: block;
+        }
+
+        .result-status {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .status-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .status-icon.avoid {
+            background: rgba(217, 69, 69, 0.15);
+            color: var(--accent-avoid);
+        }
+
+        .status-icon.safe {
+            background: rgba(45, 159, 102, 0.15);
+            color: var(--accent-safe);
+        }
+
+        .status-icon.unknown {
+            background: rgba(232, 155, 60, 0.15);
+            color: var(--accent-unknown);
+        }
+
+        .result-text h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .result-text.avoid h2 {
+            color: var(--accent-avoid);
+        }
+
+        .result-text.safe h2 {
+            color: var(--accent-safe);
+        }
+
+        .result-text.unknown h2 {
+            color: var(--accent-unknown);
+        }
+
+        .result-category {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .ingredient-name {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .legend {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px var(--shadow);
+            animation: fadeInUp 0.6s ease-out 0.2s backwards;
+        }
+
+        .legend h3 {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .legend-dot.avoid {
+            background: var(--accent-avoid);
+        }
+
+        .legend-dot.safe {
+            background: var(--accent-safe);
+        }
+
+        .legend-dot.unknown {
+            background: var(--accent-unknown);
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 24px;
+            }
+
+            .subtitle {
+                font-size: 13px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Curly Girl<br>Ingredient Checker</h1>
+            <p class="subtitle">Check if ingredients are Curly Girl Method approved</p>
+        </header>
+
+        <div class="search-container">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Type ingredient name..."
+                autocomplete="off"
+            >
+            <button class="clear-button" id="clearButton">✕</button>
+            <div class="autocomplete-list" id="autocompleteList"></div>
+        </div>
+
+        <div class="result-card" id="resultCard">
+            <div class="result-status">
+                <div class="status-icon" id="statusIcon"></div>
+                <div class="result-text" id="resultText">
+                    <h2 id="statusTitle"></h2>
+                    <div class="result-category" id="categoryName"></div>
+                </div>
+            </div>
+            <div class="ingredient-name" id="ingredientName"></div>
+        </div>
+
+        <div class="legend">
+            <h3>Legend</h3>
+            <div class="legend-item">
+                <div class="legend-dot avoid"></div>
+                <span>Avoid - Not CG approved</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot safe"></div>
+                <span>Safe - CG approved</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot unknown"></div>
+                <span>Unknown</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ingredientsData = {
+            avoid: {
+                "Strong Sulfates": [
+                    "Alkylbenzene sulfonate",
+                    "Alkyl Benzene Sulfonate",
+                    "Ammonium laureth sulfate",
+                    "Ammonium lauryl sulfate",
+                    "Ammonium Xylenesulfonate",
+                    "Magnesium lauryl sulfate",
+                    "Sodium alkylbenzene Sulfonate",
+                    "Sodium C14-16 Olefin Sulfonate",
+                    "Sodium Coceth/Coco Sulfate",
+                    "Sodium laureth sulfate",
+                    "Sodium lauryl sulfate",
+                    "Sodium myreth sulfate",
+                    "Sodium Polystrene Sulfate",
+                    "Sodium Xylenesulfonate",
+                    "Sodium Trideceth Sulfate",
+                    "TEA‑dodecylbenzenesulfonate",
+                    "TEA lauryl sulfate"
+                ],
+                "Milder Sulfates": [
+                    "Ethyl PEG‑15 cocamine sulfate",
+                    "Dioctyl sodium sulfosuccinate",
+                    "Disodium sulfolaurate",
+                    "Pluronic and Tetronic surfactants",
+                    "Sodium lauryl glucose carboxylate",
+                    "Sodium methyl 2‑sulfolaurate"
+                ],
+                "Silicones & Other Accumulative Materials": [
+                    "Aminedimethicone",
+                    "Aminodimethicone",
+                    "Amodimethicone",
+                    "Amodimethiconol",
+                    "Amodimethicone Hydroxystearate",
+                    "Bees Wax",
+                    "Bis‑Amino PEG/PPG‑41/3 Aminoethyl PG‑Propyl Dimethicone",
+                    "Bis‑Aminopropyl Dimethicone",
+                    "Bis‑Cetearyl Amodimethicone",
+                    "Bis‑Phenylpropyl Dimethicone",
+                    "Candelia wax",
+                    "Carnauba Wax",
+                    "Cera Alba",
+                    "Cetearyl methicone",
+                    "Cetyl Dimethicone",
+                    "Cyclomethicone",
+                    "Cyclopentasiloxane",
+                    "Dimethicone",
+                    "Dimethicone Copolymer",
+                    "Dimethicone Propyl PG‑Betaine",
+                    "Dimethiconol",
+                    "Dimethiconol Behenoxy",
+                    "Disiloxane",
+                    "Hexamethyldisiloxane",
+                    "Lanolin",
+                    "Mineral oil",
+                    "Parrifidium liquidium",
+                    "Phenyl trimethicone",
+                    "Petrolatum",
+                    "Polysilicone‑18 Cetyl Phosphate",
+                    "Silicone Quaternium‑16",
+                    "Silicone Quaternium‑18",
+                    "Silicone Quaternium‑22",
+                    "Silicone Resin Spheres",
+                    "Simethicone Stearoxy",
+                    "Stearoxy Dimethicone",
+                    "Stearyl Dimethicone",
+                    "Trimethylsilylamodimethicone",
+                    "Trisiloxane",
+                    "Isododecane"
+                ],
+                "Drying Alcohols": [
+                    "Alcohol Denat",
+                    "Denatured alcohol",
+                    "Ethanol",
+                    "Isopropanol Alcohol",
+                    "Isopropyl alcohol",
+                    "Propanol",
+                    "Propyl alcohol",
+                    "SD alcohol",
+                    "SD alcohol 40",
+                    "Witch hazel"
+                ]
+            },
+            safe: {
+                "Gentle Sulfates": [
+                    "Babassuamidopropyl betaine",
+                    "Behentrimonium methosulfate",
+                    "Cocamidopropyl betaine",
+                    "Coco betaine",
+                    "Cocoamphoacetate",
+                    "Cocoamphodipropionate",
+                    "Decyl glucoside",
+                    "Disodium cocoamphodiacetate",
+                    "Disodium cocoamphodipropionate",
+                    "Disodium lautreth sulfosuccinate",
+                    "Lauroamphoacetate",
+                    "Magnesium Sulfate",
+                    "Poly decyl glucoside carboxylate",
+                    "Sodium cocoamphoacetate",
+                    "Sodium cocoyl glutamate",
+                    "Sodium cocoyl isethionate",
+                    "Sodium cocoyl sarcosinate",
+                    "Sodium lauroyl glutamate",
+                    "Sodium Lauryl Sarcosinate",
+                    "Sodium lauryl sulfoacetate",
+                    "Sodium methyl cocoyl taurate",
+                    "Sodium lauroamphoacetate",
+                    "Sodium Lauroyl Methyl Isethionate"
+                ],
+                "Water‑Soluble Silicones & Related": [
+                    "Benzophenone‑2‑10",
+                    "DEA PG‑Propyl PEG/PPG‑18/21 Dimethicone",
+                    "Dimethicone Copolyol",
+                    "Dimethicone PEG‑8 Phosphate",
+                    "Dimethicone‑PG Diethylmonium Chloride",
+                    "Emulsifying Wax",
+                    "Hydrolyzed Wheat Protein Hydroxypropyl Polysiloxane",
+                    "Lauryl PEG/PPG‑18/18 Methicone",
+                    "Methychloroisothiazolinone",
+                    "Methylisothiazolinone",
+                    "PEG‑Dimethicone",
+                    "PEG‑Hydrogenated Castor Oil",
+                    "Silicone Quaternium‑8"
+                ],
+                "Non‑Drying / Fatty Alcohols": [
+                    "Behenyl alcohol",
+                    "C30‑50 Alcohols",
+                    "Cetearyl alcohol",
+                    "Cetyl alcohol",
+                    "Isocetyl alcohol",
+                    "Isostearyl alcohol",
+                    "Lanolin alcohol",
+                    "Lauryl alcohol",
+                    "Myristyl alcohol",
+                    "Stearyl alcohol"
+                ]
+            }
+        };
+
+        // Create searchable index
+        const searchIndex = [];
+        
+        Object.entries(ingredientsData.avoid).forEach(([category, ingredients]) => {
+            ingredients.forEach(ingredient => {
+                searchIndex.push({
+                    name: ingredient,
+                    category: category,
+                    status: 'avoid'
+                });
+            });
+        });
+
+        Object.entries(ingredientsData.safe).forEach(([category, ingredients]) => {
+            ingredients.forEach(ingredient => {
+                searchIndex.push({
+                    name: ingredient,
+                    category: category,
+                    status: 'safe'
+                });
+            });
+        });
+
+        // DOM elements
+        const searchInput = document.getElementById('searchInput');
+        const autocompleteList = document.getElementById('autocompleteList');
+        const resultCard = document.getElementById('resultCard');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusTitle = document.getElementById('statusTitle');
+        const categoryName = document.getElementById('categoryName');
+        const ingredientName = document.getElementById('ingredientName');
+        const resultText = document.getElementById('resultText');
+        const clearButton = document.getElementById('clearButton');
+
+        let currentFocus = -1;
+
+        // Clear button functionality
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            clearButton.classList.remove('visible');
+            autocompleteList.classList.remove('active');
+            resultCard.classList.remove('show');
+            searchInput.focus();
+        });
+
+        // Autocomplete functionality
+        searchInput.addEventListener('input', function() {
+            const value = this.value.toLowerCase().trim();
+            autocompleteList.innerHTML = '';
+            currentFocus = -1;
+
+            // Toggle clear button visibility
+            if (value) {
+                clearButton.classList.add('visible');
+            } else {
+                clearButton.classList.remove('visible');
+            }
+
+            if (!value) {
+                autocompleteList.classList.remove('active');
+                return;
+            }
+
+            const matches = searchIndex.filter(item => 
+                item.name.toLowerCase().includes(value)
+            ).slice(0, 8);
+
+            if (matches.length > 0) {
+                matches.forEach(match => {
+                    const div = document.createElement('div');
+                    div.className = `autocomplete-item ${match.status}`;
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.textContent = match.name;
+                    
+                    const badge = document.createElement('span');
+                    badge.className = `autocomplete-badge ${match.status}`;
+                    badge.textContent = match.status === 'avoid' ? 'AVOID' : 'SAFE';
+                    
+                    div.appendChild(nameSpan);
+                    div.appendChild(badge);
+                    
+                    div.addEventListener('click', function() {
+                        selectIngredient(match);
+                    });
+                    autocompleteList.appendChild(div);
+                });
+                autocompleteList.classList.add('active');
+            } else {
+                autocompleteList.classList.remove('active');
+            }
+        });
+
+        // Keyboard navigation
+        searchInput.addEventListener('keydown', function(e) {
+            const items = autocompleteList.getElementsByClassName('autocomplete-item');
+            
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                currentFocus++;
+                addActive(items);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                currentFocus--;
+                addActive(items);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (currentFocus > -1 && items[currentFocus]) {
+                    items[currentFocus].click();
+                } else if (this.value.trim()) {
+                    checkIngredient(this.value.trim());
+                }
+            }
+        });
+
+        function addActive(items) {
+            if (!items || items.length === 0) return;
+            removeActive(items);
+            if (currentFocus >= items.length) currentFocus = 0;
+            if (currentFocus < 0) currentFocus = items.length - 1;
+            items[currentFocus].classList.add('highlighted');
+        }
+
+        function removeActive(items) {
+            for (let i = 0; i < items.length; i++) {
+                items[i].classList.remove('highlighted');
+            }
+        }
+
+        // Close autocomplete when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target !== searchInput) {
+                autocompleteList.classList.remove('active');
+            }
+        });
+
+        function selectIngredient(ingredient) {
+            searchInput.value = ingredient.name;
+            autocompleteList.classList.remove('active');
+            displayResult(ingredient);
+        }
+
+        function checkIngredient(name) {
+            const match = searchIndex.find(item => 
+                item.name.toLowerCase() === name.toLowerCase()
+            );
+
+            if (match) {
+                displayResult(match);
+            } else {
+                displayResult({
+                    name: name,
+                    category: 'Unknown ingredient',
+                    status: 'unknown'
+                });
+            }
+        }
+
+        function displayResult(ingredient) {
+            resultCard.classList.add('show');
+            
+            // Clear previous classes
+            statusIcon.className = 'status-icon';
+            resultText.className = 'result-text';
+            
+            if (ingredient.status === 'avoid') {
+                statusIcon.classList.add('avoid');
+                statusIcon.textContent = '❌';
+                resultText.classList.add('avoid');
+                statusTitle.textContent = 'Avoid';
+                categoryName.textContent = ingredient.category;
+            } else if (ingredient.status === 'safe') {
+                statusIcon.classList.add('safe');
+                statusIcon.textContent = '✓';
+                resultText.classList.add('safe');
+                statusTitle.textContent = 'Safe to Use';
+                categoryName.textContent = ingredient.category;
+            } else {
+                statusIcon.classList.add('unknown');
+                statusIcon.textContent = '?';
+                resultText.classList.add('unknown');
+                statusTitle.textContent = 'Unknown';
+                categoryName.textContent = 'Not in database';
+            }
+            
+            ingredientName.textContent = ingredient.name;
+        }
+    </script>
+</body>
+</html>
