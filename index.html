@@ -298,6 +298,212 @@
             background: var(--accent-unknown);
         }
 
+        /* Full Ingredient List Checker Styles */
+        .section-divider {
+            margin: 40px 0 24px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .section-divider h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, #f8f5f1 0%, #ebe5dd 100%);
+            display: inline-block;
+            padding: 0 16px;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+        }
+
+        .ingredient-list-container {
+            margin-top: 24px;
+            animation: fadeInUp 0.6s ease-out 0.15s backwards;
+        }
+
+        .ingredient-list-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .ingredient-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text-primary);
+            resize: vertical;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .ingredient-textarea:focus {
+            outline: none;
+            border-color: var(--text-primary);
+        }
+
+        .ingredient-textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .check-button {
+            width: 100%;
+            margin-top: 12px;
+            padding: 14px;
+            background: var(--text-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .check-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .check-button:active {
+            transform: translateY(0);
+        }
+
+        .list-results {
+            margin-top: 24px;
+            padding: 20px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px var(--shadow);
+            display: none;
+        }
+
+        .list-results.show {
+            display: block;
+            animation: fadeInUp 0.4s ease-out;
+        }
+
+        .list-results h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .ingredient-item {
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .ingredient-item.approved {
+            background: rgba(45, 159, 102, 0.1);
+            border-left: 3px solid var(--accent-safe);
+        }
+
+        .ingredient-item.not-approved {
+            background: rgba(217, 69, 69, 0.1);
+            border-left: 3px solid var(--accent-avoid);
+        }
+
+        .ingredient-item.unknown {
+            background: transparent;
+            border-left: none;
+        }
+
+        .ingredient-status {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .ingredient-status.approved {
+            color: var(--accent-safe);
+        }
+
+        .ingredient-status.not-approved {
+            color: var(--accent-avoid);
+        }
+
+        .results-summary {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 2px solid var(--border);
+        }
+
+        .summary-item {
+            padding: 8px 0;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .summary-item strong {
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .summary-item span {
+            text-align: right;
+        }
+
+        .summary-item.not-approved {
+            color: var(--accent-avoid);
+        }
+
+        .summary-item.approved {
+            color: var(--accent-safe);
+        }
+
+        .conclusion {
+            margin-top: 16px;
+            padding: 16px;
+            background: rgba(217, 69, 69, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .conclusion.pass {
+            background: rgba(45, 159, 102, 0.1);
+            color: var(--accent-safe);
+        }
+
+        .conclusion.fail {
+            color: var(--accent-avoid);
+        }
+
         @keyframes fadeInDown {
             from {
                 opacity: 0;
@@ -349,6 +555,8 @@
             <p class="subtitle">Check if ingredients are Curly Girl Method approved</p>
         </header>
 
+        <h2 class="section-title">Check Single Ingredient</h2>
+
         <div class="search-container">
             <input 
                 type="text" 
@@ -369,6 +577,32 @@
                 </div>
             </div>
             <div class="ingredient-name" id="ingredientName"></div>
+        </div>
+
+        <div class="section-divider">
+            <h2>Check Full Ingredient List</h2>
+        </div>
+
+        <div class="ingredient-list-container">
+            <label class="ingredient-list-label">Paste full ingredient list (separate by commas):</label>
+            <textarea 
+                id="ingredientListInput"
+                class="ingredient-textarea"
+                placeholder="Example: Water, Glycerin, Cetyl Alcohol, Dimethicone, Behentrimonium Chloride..."
+            ></textarea>
+            <button class="check-button" id="checkListButton">Check Ingredients</button>
+        </div>
+
+        <div class="list-results" id="listResults">
+            <h3>Ingredient List Analysis:</h3>
+            <div id="ingredientAnalysis"></div>
+            
+            <div class="results-summary">
+                <h3>Summary:</h3>
+                <div id="summaryContent"></div>
+            </div>
+            
+            <div id="conclusionDiv"></div>
         </div>
 
         <div class="legend">
@@ -715,6 +949,113 @@
             }
             
             ingredientName.textContent = ingredient.name;
+        }
+
+        // Full Ingredient List Checker
+        const ingredientListInput = document.getElementById('ingredientListInput');
+        const checkListButton = document.getElementById('checkListButton');
+        const listResults = document.getElementById('listResults');
+        const ingredientAnalysis = document.getElementById('ingredientAnalysis');
+        const summaryContent = document.getElementById('summaryContent');
+        const conclusionDiv = document.getElementById('conclusionDiv');
+
+        checkListButton.addEventListener('click', checkIngredientList);
+
+        function checkIngredientList() {
+            const inputText = ingredientListInput.value.trim();
+            
+            if (!inputText) {
+                alert('Please paste an ingredient list');
+                return;
+            }
+
+            // Split by comma and clean up
+            const ingredients = inputText
+                .split(',')
+                .map(ing => ing.trim())
+                .filter(ing => ing.length > 0);
+
+            if (ingredients.length === 0) {
+                alert('No ingredients found. Please separate ingredients by commas.');
+                return;
+            }
+
+            // Analyze each ingredient
+            const results = ingredients.map(ing => {
+                const found = checkIngredient(ing);
+                return {
+                    name: ing,
+                    status: found ? (found.avoid ? 'not-approved' : 'approved') : 'unknown',
+                    category: found ? found.category : null
+                };
+            });
+
+            displayListResults(results);
+        }
+
+        function displayListResults(results) {
+            // Clear previous results
+            ingredientAnalysis.innerHTML = '';
+            summaryContent.innerHTML = '';
+            conclusionDiv.innerHTML = '';
+
+            // Display each ingredient with color coding
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = `ingredient-item ${result.status}`;
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.textContent = result.name;
+                
+                const statusSpan = document.createElement('span');
+                statusSpan.className = `ingredient-status ${result.status}`;
+                
+                if (result.status === 'approved') {
+                    statusSpan.textContent = '✓';
+                } else if (result.status === 'not-approved') {
+                    statusSpan.textContent = '✗';
+                } else {
+                    statusSpan.textContent = '';
+                }
+                
+                item.appendChild(nameSpan);
+                item.appendChild(statusSpan);
+                ingredientAnalysis.appendChild(item);
+            });
+
+            // Calculate summary
+            const approvedCount = results.filter(r => r.status === 'approved').length;
+            const notApprovedCount = results.filter(r => r.status === 'not-approved').length;
+            const notApprovedNames = results.filter(r => r.status === 'not-approved').map(r => r.name);
+
+            // Display summary (not-approved first as requested)
+            if (notApprovedCount > 0) {
+                const notApprovedItem = document.createElement('div');
+                notApprovedItem.className = 'summary-item not-approved';
+                notApprovedItem.innerHTML = `<strong>✗ Not Approved:</strong> <span>${notApprovedCount} ingredient${notApprovedCount > 1 ? 's' : ''} (${notApprovedNames.join(', ')})</span>`;
+                summaryContent.appendChild(notApprovedItem);
+            }
+
+            if (approvedCount > 0) {
+                const approvedItem = document.createElement('div');
+                approvedItem.className = 'summary-item approved';
+                approvedItem.innerHTML = `<strong>✓ Approved:</strong> <span>${approvedCount} ingredient${approvedCount > 1 ? 's' : ''}</span>`;
+                summaryContent.appendChild(approvedItem);
+            }
+
+            // Display conclusion
+            const conclusion = document.createElement('div');
+            conclusion.className = notApprovedCount > 0 ? 'conclusion fail' : 'conclusion pass';
+            conclusion.textContent = notApprovedCount > 0 
+                ? '❌ Product is NOT CGM approved' 
+                : '✅ Product is fully CGM approved';
+            conclusionDiv.appendChild(conclusion);
+
+            // Show results
+            listResults.classList.add('show');
+            
+            // Scroll to results
+            listResults.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
     </script>
 </body>
