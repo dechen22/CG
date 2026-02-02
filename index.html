@@ -978,11 +978,11 @@
             }
         });
 
-        // Add Enter key functionality
-        ingredientListInput.addEventListener('keypress', function(e) {
+        // Add Enter key functionality for mobile and desktop
+        ingredientListInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault();
-                checkListButton.click();
+                checkIngredientList();
             }
         });
 
@@ -1063,16 +1063,22 @@
             // Calculate summary
             const approvedCount = results.filter(r => r.status === 'approved').length;
             const notApprovedCount = results.filter(r => r.status === 'not-approved').length;
-            const notApprovedNames = results.filter(r => r.status === 'not-approved').map(r => r.name);
+            const notApprovedItems = results.filter(r => r.status === 'not-approved');
 
             // Display summary (not-approved first as requested)
             if (notApprovedCount > 0) {
                 const notApprovedItem = document.createElement('div');
                 notApprovedItem.className = 'summary-item not-approved';
+                
+                // Create list with each ingredient on its own line
+                const ingredientList = notApprovedItems.map(item => 
+                    `<div style="padding: 2px 0;">${item.name} <span style="color: #8A8A8A; font-size: 12px;">[${item.category}]</span></div>`
+                ).join('');
+                
                 notApprovedItem.innerHTML = `
                     <div style="width: 100%;">
-                        <div style="margin-bottom: 4px;"><strong>✗ Not Approved: ${notApprovedCount} ingredient${notApprovedCount > 1 ? 's' : ''}</strong></div>
-                        <div style="font-size: 13px; padding-left: 10px;">${notApprovedNames.join(', ')}</div>
+                        <div style="margin-bottom: 6px;"><strong>✗ Not Approved: ${notApprovedCount} ingredient${notApprovedCount > 1 ? 's' : ''}</strong></div>
+                        <div style="font-size: 13px; padding-left: 10px;">${ingredientList}</div>
                     </div>
                 `;
                 summaryContent.appendChild(notApprovedItem);
