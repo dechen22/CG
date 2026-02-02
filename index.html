@@ -13,20 +13,24 @@
         }
 
         :root {
-            --bg-primary: #f8f5f1;
+            --bg-primary: #C8F0DD;
             --bg-card: #ffffff;
-            --text-primary: #2d2d2d;
-            --text-secondary: #6b6b6b;
-            --accent-avoid: #d94545;
-            --accent-safe: #2d9f66;
-            --accent-unknown: #e89b3c;
-            --border: #e0ddd9;
-            --shadow: rgba(0, 0, 0, 0.08);
+            --text-primary: #6B4C7A;
+            --text-secondary: #8A8A8A;
+            --accent-avoid: #FF8BAD;
+            --accent-safe: #2D9F66;
+            --accent-unknown: #8A8A8A;
+            --border: #C8A8D0;
+            --shadow: rgba(107, 76, 122, 0.25);
+            --button-bg: #FF8BAD;
+            --button-hover: #FF6B9D;
+            --button-text: #6B4C7A;
+            --field-bg: #F5EFE6;
         }
 
         body {
             font-family: 'DM Sans', sans-serif;
-            background: linear-gradient(135deg, #f8f5f1 0%, #ebe5dd 100%);
+            background: #C8F0DD;
             color: var(--text-primary);
             min-height: 100vh;
             padding: 20px;
@@ -91,9 +95,10 @@
             width: 100%;
             padding: 16px 20px;
             font-size: 16px;
-            border: 2px solid var(--border);
+            border: 3px solid var(--border);
             border-radius: 12px;
-            background: var(--bg-card);
+            background: var(--field-bg);
+            color: var(--text-primary);
             font-family: 'DM Sans', sans-serif;
             transition: all 0.3s ease;
             box-shadow: 0 2px 8px var(--shadow);
@@ -299,42 +304,18 @@
         }
 
         /* Full Ingredient List Checker Styles */
-        .section-divider {
-            margin: 40px 0 24px 0;
-            text-align: center;
-            position: relative;
-        }
-
-        .section-divider::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .section-divider h2 {
+        .section-title {
             font-size: 16px;
             font-weight: 600;
             color: var(--text-primary);
-            background: linear-gradient(135deg, #f8f5f1 0%, #ebe5dd 100%);
-            display: inline-block;
-            padding: 0 16px;
-            position: relative;
-        }
-
-        .section-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
             margin-bottom: 16px;
+            text-align: center;
         }
 
         .ingredient-list-container {
             margin-top: 24px;
             animation: fadeInUp 0.6s ease-out 0.15s backwards;
+            position: relative;
         }
 
         .ingredient-list-label {
@@ -344,15 +325,19 @@
             margin-bottom: 8px;
         }
 
+        .textarea-wrapper {
+            position: relative;
+        }
+
         .ingredient-textarea {
             width: 100%;
             min-height: 120px;
-            padding: 16px;
-            background: var(--bg-card);
-            border: 2px solid var(--border);
+            padding: 16px 40px 16px 16px;
+            background: var(--field-bg);
+            border: 3px solid var(--border);
             border-radius: 10px;
             font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
+            font-size: 16px;
             color: var(--text-primary);
             resize: vertical;
             transition: all 0.3s ease;
@@ -362,31 +347,62 @@
         .ingredient-textarea:focus {
             outline: none;
             border-color: var(--text-primary);
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .ingredient-textarea::placeholder {
             color: var(--text-secondary);
         }
 
+        .clear-textarea-button {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            width: 24px;
+            height: 24px;
+            background: var(--text-secondary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .clear-textarea-button:hover {
+            background: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        .clear-textarea-button.show {
+            display: flex;
+        }
+
         .check-button {
             width: 100%;
             margin-top: 12px;
             padding: 14px;
-            background: var(--text-primary);
-            color: white;
+            background: var(--button-bg);
+            color: var(--button-text);
             border: none;
             border-radius: 10px;
             font-family: 'DM Sans', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px var(--shadow);
+            box-shadow: 0 3px 10px var(--shadow);
         }
 
         .check-button:hover {
+            background: var(--button-hover);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px var(--shadow);
+            box-shadow: 0 5px 15px var(--shadow);
         }
 
         .check-button:active {
@@ -395,7 +411,7 @@
 
         .list-results {
             margin-top: 24px;
-            padding: 20px;
+            padding: 16px;
             background: var(--bg-card);
             border-radius: 10px;
             box-shadow: 0 2px 8px var(--shadow);
@@ -408,31 +424,32 @@
         }
 
         .list-results h3 {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             color: var(--text-primary);
         }
 
         .ingredient-item {
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            border-radius: 8px;
+            padding: 2px 6px;
+            margin-bottom: 0px;
+            border-radius: 2px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 14px;
+            font-size: 13px;
+            line-height: 1.2;
             transition: all 0.2s ease;
         }
 
         .ingredient-item.approved {
-            background: rgba(45, 159, 102, 0.1);
-            border-left: 3px solid var(--accent-safe);
+            background: rgba(45, 159, 102, 0.25);
+            border-left: 4px solid var(--accent-safe);
         }
 
         .ingredient-item.not-approved {
-            background: rgba(217, 69, 69, 0.1);
-            border-left: 3px solid var(--accent-avoid);
+            background: rgba(255, 139, 173, 0.3);
+            border-left: 4px solid var(--accent-avoid);
         }
 
         .ingredient-item.unknown {
@@ -454,18 +471,16 @@
         }
 
         .results-summary {
-            margin-top: 20px;
-            padding-top: 16px;
+            margin-top: 16px;
+            padding-top: 12px;
             border-top: 2px solid var(--border);
         }
 
         .summary-item {
-            padding: 8px 0;
+            padding: 6px 0;
             font-size: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
+            display: block;
+            width: 100%;
         }
 
         .summary-item strong {
@@ -486,18 +501,20 @@
         }
 
         .conclusion {
-            margin-top: 16px;
-            padding: 16px;
-            background: rgba(217, 69, 69, 0.1);
+            margin-top: 12px;
+            padding: 12px;
+            background: rgba(255, 139, 173, 0.3);
             border-radius: 8px;
             text-align: center;
             font-weight: 600;
             font-size: 15px;
+            border: 3px solid var(--accent-avoid);
         }
 
         .conclusion.pass {
-            background: rgba(45, 159, 102, 0.1);
+            background: rgba(45, 159, 102, 0.25);
             color: var(--accent-safe);
+            border: 3px solid var(--accent-safe);
         }
 
         .conclusion.fail {
@@ -555,7 +572,7 @@
             <p class="subtitle">Check if ingredients are Curly Girl Method approved</p>
         </header>
 
-        <h2 class="section-title">Check Single Ingredient</h2>
+        <h2 class="section-title">Single Ingredient</h2>
 
         <div class="search-container">
             <input 
@@ -579,18 +596,18 @@
             <div class="ingredient-name" id="ingredientName"></div>
         </div>
 
-        <div class="section-divider">
-            <h2>Check Full Ingredient List</h2>
-        </div>
+        <h2 class="section-title" style="margin-top: 40px;">Full Ingredient List</h2>
 
         <div class="ingredient-list-container">
-            <label class="ingredient-list-label">Paste full ingredient list (separate by commas):</label>
-            <textarea 
-                id="ingredientListInput"
-                class="ingredient-textarea"
-                placeholder="Example: Water, Glycerin, Cetyl Alcohol, Dimethicone, Behentrimonium Chloride..."
-            ></textarea>
-            <button class="check-button" id="checkListButton">Check Ingredients</button>
+            <div class="textarea-wrapper">
+                <textarea 
+                    id="ingredientListInput"
+                    class="ingredient-textarea"
+                    placeholder="Example: Water, Glycerin, Cetyl Alcohol, Dimethicone, Behentrimonium Chloride..."
+                ></textarea>
+                <button class="clear-textarea-button" id="clearTextareaButton">✕</button>
+            </div>
+            <button class="check-button" id="checkListButton">Check Ingredient List</button>
         </div>
 
         <div class="list-results" id="listResults">
@@ -603,22 +620,6 @@
             </div>
             
             <div id="conclusionDiv"></div>
-        </div>
-
-        <div class="legend">
-            <h3>Legend</h3>
-            <div class="legend-item">
-                <div class="legend-dot avoid"></div>
-                <span>Avoid - Not CG approved</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot safe"></div>
-                <span>Safe - CG approved</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-dot unknown"></div>
-                <span>Unknown</span>
-            </div>
         </div>
     </div>
 
@@ -921,6 +922,14 @@
             }
         }
 
+        // New function to search ingredient and return the data (for list checker)
+        function searchIngredient(name) {
+            const match = searchIndex.find(item => 
+                item.name.toLowerCase() === name.toLowerCase()
+            );
+            return match; // Returns the ingredient object or undefined
+        }
+
         function displayResult(ingredient) {
             resultCard.classList.add('show');
             
@@ -954,10 +963,38 @@
         // Full Ingredient List Checker
         const ingredientListInput = document.getElementById('ingredientListInput');
         const checkListButton = document.getElementById('checkListButton');
+        const clearTextareaButton = document.getElementById('clearTextareaButton');
         const listResults = document.getElementById('listResults');
         const ingredientAnalysis = document.getElementById('ingredientAnalysis');
         const summaryContent = document.getElementById('summaryContent');
         const conclusionDiv = document.getElementById('conclusionDiv');
+
+        // Show/hide clear button based on textarea content
+        ingredientListInput.addEventListener('input', function() {
+            if (this.value.trim().length > 0) {
+                clearTextareaButton.classList.add('show');
+            } else {
+                clearTextareaButton.classList.remove('show');
+            }
+        });
+
+        // Add Enter key functionality
+        ingredientListInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                checkListButton.click();
+            }
+        });
+
+        // Clear textarea and results
+        clearTextareaButton.addEventListener('click', function() {
+            ingredientListInput.value = '';
+            clearTextareaButton.classList.remove('show');
+            listResults.classList.remove('show');
+            ingredientAnalysis.innerHTML = '';
+            summaryContent.innerHTML = '';
+            conclusionDiv.innerHTML = '';
+        });
 
         checkListButton.addEventListener('click', checkIngredientList);
 
@@ -982,10 +1019,10 @@
 
             // Analyze each ingredient
             const results = ingredients.map(ing => {
-                const found = checkIngredient(ing);
+                const found = searchIngredient(ing);
                 return {
                     name: ing,
-                    status: found ? (found.avoid ? 'not-approved' : 'approved') : 'unknown',
+                    status: found ? (found.status === 'avoid' ? 'not-approved' : 'approved') : 'unknown',
                     category: found ? found.category : null
                 };
             });
@@ -1032,7 +1069,12 @@
             if (notApprovedCount > 0) {
                 const notApprovedItem = document.createElement('div');
                 notApprovedItem.className = 'summary-item not-approved';
-                notApprovedItem.innerHTML = `<strong>✗ Not Approved:</strong> <span>${notApprovedCount} ingredient${notApprovedCount > 1 ? 's' : ''} (${notApprovedNames.join(', ')})</span>`;
+                notApprovedItem.innerHTML = `
+                    <div style="width: 100%;">
+                        <div style="margin-bottom: 4px;"><strong>✗ Not Approved: ${notApprovedCount} ingredient${notApprovedCount > 1 ? 's' : ''}</strong></div>
+                        <div style="font-size: 13px; padding-left: 10px;">${notApprovedNames.join(', ')}</div>
+                    </div>
+                `;
                 summaryContent.appendChild(notApprovedItem);
             }
 
@@ -1045,10 +1087,21 @@
 
             // Display conclusion
             const conclusion = document.createElement('div');
-            conclusion.className = notApprovedCount > 0 ? 'conclusion fail' : 'conclusion pass';
-            conclusion.textContent = notApprovedCount > 0 
-                ? '❌ Product is NOT CGM approved' 
-                : '✅ Product is fully CGM approved';
+            
+            if (notApprovedCount > 0) {
+                // If there are any not-approved ingredients, product fails
+                conclusion.className = 'conclusion fail';
+                conclusion.textContent = '❌ Product is NOT CGM approved';
+            } else if (approvedCount > 0) {
+                // If there are no not-approved ingredients AND some approved ones, it passes
+                conclusion.className = 'conclusion pass';
+                conclusion.textContent = '✅ Product is fully CGM approved';
+            } else {
+                // If all ingredients are unknown, we can't determine
+                conclusion.className = 'conclusion fail';
+                conclusion.textContent = '⚠ Cannot determine - all ingredients are unknown';
+            }
+            
             conclusionDiv.appendChild(conclusion);
 
             // Show results
